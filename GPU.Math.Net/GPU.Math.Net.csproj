@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="kernels\generic.cl" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Kernel Include="kernels\generic.cl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Kernel>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="OpenCL.Net" Version="2.2.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="kernels\double\ModuloConstantValue.cl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="kernels\double\ModuloDynamicValue.cl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="kernels\float\ModuloConstantValue.cl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="kernels\float\ModuloDynamicValue.cl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
