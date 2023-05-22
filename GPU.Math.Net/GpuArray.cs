@@ -480,6 +480,32 @@ namespace GPU.Math.Net
             return result;
         }
 
+        public void Log2() => Log2(Elements);
+
+        public void Log2(int count)
+        {
+            var kernel = OperationKernelManager.GetKernel(Gpu, Type, nameof(Log2));
+
+            Cl.SetKernelArg(kernel, 0, GpuMem);
+            Cl.SetKernelArg(kernel, 1, GpuMem);
+
+            Gpu.ExecuteKernel(kernel, count);
+        }
+
+        public GpuArray<T> Log2ToNewArray() => Log2ToNewArray(Elements);
+
+        public GpuArray<T> Log2ToNewArray(int count)
+        {
+            var kernel = OperationKernelManager.GetKernel(Gpu, Type, nameof(Log2));
+            var result = new GpuArray<T>(Gpu, count, MemFlags.ReadWrite);
+
+            Cl.SetKernelArg(kernel, 0, GpuMem);
+            Cl.SetKernelArg(kernel, 1, result.GpuMem);
+
+            Gpu.ExecuteKernel(kernel, count);
+
+            return result;
+        }
 
         public static GpuArray<T> operator +(GpuArray<T> left, GpuArray<T> right) => left.AddToNewArray(right);
         public static GpuArray<T> operator -(GpuArray<T> left, GpuArray<T> right) => left.SubtractToNewArray(right);
