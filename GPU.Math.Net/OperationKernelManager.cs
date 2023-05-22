@@ -35,7 +35,7 @@ namespace GPU.Math.Net
                     }
                 }
                 Counter++;
-                string code;
+                string? code = null;
                 string? raw = null;
 
                 // if a specific kernel for this combination exists compile it
@@ -66,6 +66,9 @@ namespace GPU.Math.Net
 
                     code = raw.Replace("TYPENAMEHERE", cName);
                 }
+
+                if (code == null)
+                    throw new NullReferenceException();
 
                 var program = Cl.CreateProgramWithSource(gpu.Context, 1, new[] { code }, null, out var error);
 
