@@ -372,6 +372,33 @@ namespace GPU.Math.Net
             return result;
         }
 
+        public void Sin() => Sin(Elements);
+
+        public void Sin(int count)
+        {
+            var kernel = OperationKernelManager.GetKernel(Gpu, Type, nameof(Sin));
+
+            Cl.SetKernelArg(kernel, 0, GpuMem);
+            Cl.SetKernelArg(kernel, 1, GpuMem);
+
+            Gpu.ExecuteKernel(kernel, count);
+        }
+
+        public GpuArray<T> SinToNewArray() => SinToNewArray(Elements);
+
+        public GpuArray<T> SinToNewArray(int count)
+        {
+            var kernel = OperationKernelManager.GetKernel(Gpu, Type, nameof(Sin));
+            var result = new GpuArray<T>(Gpu, count, MemFlags.ReadWrite);
+
+            Cl.SetKernelArg(kernel, 0, GpuMem);
+            Cl.SetKernelArg(kernel, 1, result.GpuMem);
+
+            Gpu.ExecuteKernel(kernel, count);
+
+            return result;
+        }
+
         public static GpuArray<T> operator +(GpuArray<T> left, GpuArray<T> right) => left.AddToNewArray(right);
         public static GpuArray<T> operator -(GpuArray<T> left, GpuArray<T> right) => left.SubtractToNewArray(right);
         public static GpuArray<T> operator *(GpuArray<T> left, GpuArray<T> right) => left.MultiplyToNewArray(right);
