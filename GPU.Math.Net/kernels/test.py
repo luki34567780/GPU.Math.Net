@@ -8,3 +8,10 @@ with open("generic.cl", "r") as f:
 code = code.replace("TYPENAMEHERE", "float")
 program = pyopencl.Program(context, code)
 program.build()
+
+with open("generic.cl", "r") as f:
+    code = f.read()
+
+code = code.replace("TYPENAMEHERE", "int")
+program = pyopencl.Program(context, code)
+program.build()
