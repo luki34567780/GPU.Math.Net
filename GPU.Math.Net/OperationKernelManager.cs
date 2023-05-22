@@ -17,6 +17,7 @@ namespace GPU.Math.Net
             { typeof(ushort), "ushort" },
             { typeof(float), "float" },
             { typeof(double), "double" },
+            { typeof(Half), "half" }
         };
 
         public static Kernel GetKernel(GPU gpu, Type type, string op)
@@ -35,18 +36,27 @@ namespace GPU.Math.Net
                 }
                 Counter++;
                 string code;
+                string? raw = null;
 
                 // if a specific kernel for this combination exists compile it
                 var specialPath = $"kernels/{type.Name}/{op}.cl";
+                var genericOperationPath = $"kernels/{op}.cl";
 
                 if (File.Exists(specialPath))
                 {
                     code = File.ReadAllText(specialPath);
                 }
+                else if (File.Exists(genericOperationPath))
+                {
+                    raw = File.ReadAllText(genericOperationPath);
+                }
                 else
                 {
-                    var raw = File.ReadAllText("kernels/generic.cl");
+                    raw = File.ReadAllText("kernels/generic.cl");
+                }
 
+                if (raw != null)
+                {
                     string cName;
 
                     if (CNameLookupTable.ContainsKey(type))
