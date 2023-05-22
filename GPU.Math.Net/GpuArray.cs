@@ -314,6 +314,63 @@ namespace GPU.Math.Net
             return result;
         }
 
+        public void Pow(T value) => Pow(value, Elements);
+
+        public void Pow(T value, int count)
+        {
+            var kernel = OperationKernelManager.GetKernel(Gpu, Type, "PowConstantValue");
+
+            Cl.SetKernelArg(kernel, 0, GpuMem);
+            Cl.SetKernelArg(kernel, 1, value);
+            Cl.SetKernelArg(kernel, 1, GpuMem);
+
+            Gpu.ExecuteKernel(kernel, count);
+        }
+
+        public GpuArray<T> PowToNewArray(T value) => PowToNewArray(value, Elements);
+
+        public GpuArray<T> PowToNewArray(T value, int count)
+        {
+            var kernel = OperationKernelManager.GetKernel(Gpu, Type, "PowConstantValue");
+            var result = new GpuArray<T>(Gpu, count, MemFlags.ReadWrite);
+
+            Cl.SetKernelArg(kernel, 0, GpuMem);
+            Cl.SetKernelArg(kernel, 1, value);
+            Cl.SetKernelArg(kernel, 2, result.GpuMem);
+
+            Gpu.ExecuteKernel(kernel, count);
+
+            return result;
+        }
+
+        public void Pow(GpuArray<T> values) => Pow(values, Elements);
+
+        public void Pow(GpuArray<T> values, int count)
+        {
+            var kernel = OperationKernelManager.GetKernel(Gpu, Type, "PowDynamicValue");
+
+            Cl.SetKernelArg(kernel, 0, GpuMem);
+            Cl.SetKernelArg(kernel, 1, values.GpuMem);
+            Cl.SetKernelArg(kernel, 1, GpuMem);
+
+            Gpu.ExecuteKernel(kernel, count);
+        }
+
+        public GpuArray<T> PowToNewArray(GpuArray<T> values) => PowToNewArray(values, Elements);
+
+        public GpuArray<T> PowToNewArray(GpuArray<T> values, int count)
+        {
+            var kernel = OperationKernelManager.GetKernel(Gpu, Type, "PowDynamicValue");
+            var result = new GpuArray<T>(Gpu, count, MemFlags.ReadWrite);
+
+            Cl.SetKernelArg(kernel, 0, GpuMem);
+            Cl.SetKernelArg(kernel, 1, values.GpuMem);
+            Cl.SetKernelArg(kernel, 2, result.GpuMem);
+
+            Gpu.ExecuteKernel(kernel, count);
+
+            return result;
+        }
 
         public static GpuArray<T> operator +(GpuArray<T> left, GpuArray<T> right) => left.AddToNewArray(right);
         public static GpuArray<T> operator -(GpuArray<T> left, GpuArray<T> right) => left.SubtractToNewArray(right);
