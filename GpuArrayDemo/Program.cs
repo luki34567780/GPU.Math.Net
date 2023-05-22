@@ -9,16 +9,16 @@ namespace GpuArrayDemo
         static void Main(string[] args)
         {
             var platforms = GPU.Math.Net.GPU.GetPlatforms();
-            var devices = GPU.Math.Net.GPU.GetDevices(platforms[1]);
+            var devices = GPU.Math.Net.GPU.GetDevices(platforms[0]);
             using var gpu = new GPU.Math.Net.GPU(devices[0]);
 
             var rnd = Random.Shared;
 
-            const int items = 100000000;
+            const int items = 10000000;
             const int iterations = 10000;
 
-            var aCpu = new ushort[items].Select(x => (ushort)rnd.Next(0, ushort.MaxValue)).ToArray();
-            using var a = new GpuArray<ushort>(gpu, aCpu, MemFlags.CopyHostPtr | MemFlags.ReadWrite);
+            var aCpu = new float[items].Select(x => (float)rnd.Next(0, int.MaxValue)).ToArray();
+            using var a = new GpuArray<float>(gpu, aCpu, MemFlags.CopyHostPtr | MemFlags.ReadWrite);
 
 
             var sw = new Stopwatch();
@@ -39,8 +39,8 @@ namespace GpuArrayDemo
             {
                 Parallel.For(0, items, (j) =>
                 {
-                    aCpu[j] = (ushort)(aCpu[j] + aCpu[j]);
-                    aCpu[j] = (ushort)(aCpu[j] * aCpu[j]);
+                    aCpu[j] = aCpu[j] + aCpu[j];
+                    aCpu[j] = aCpu[j] * aCpu[j];
 
                 });
             }

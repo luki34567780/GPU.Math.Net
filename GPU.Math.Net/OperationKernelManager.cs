@@ -14,7 +14,9 @@ namespace GPU.Math.Net
         private static Dictionary<GPU, Dictionary<Type, Dictionary<string, Kernel>>> _cache = new();
         private static Dictionary<Type, string> CNameLookupTable = new()
         {
-            { typeof(ushort), "ushort" }
+            { typeof(ushort), "ushort" },
+            { typeof(float), "float" },
+            { typeof(double), "double" },
         };
 
         public static Kernel GetKernel(GPU gpu, Type type, string op)

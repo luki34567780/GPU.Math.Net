@@ -34,6 +34,8 @@ __kernel void RSqrt(__global const TYPENAMEHERE* a, __global TYPENAMEHERE* resul
     result[index] = convert_TYPENAMEHERE(rsqrt(convert_double(a[index])));
 }
 
+#if !(TYPENAMEHERE == float || TYPENAMEHERE == double || TYPENAMEHERE == half)
+
 __kernel void ModuloConstantValue(__global const TYPENAMEHERE* in, const TYPENAMEHERE value, __global TYPENAMEHERE* result) {
     int index = get_global_id(0);
 
@@ -45,3 +47,4 @@ __kernel void ModuloDynamicValue(__global const TYPENAMEHERE* in, __global const
 
     result[index] = in[index] % in2[index];
 }
+#endif
