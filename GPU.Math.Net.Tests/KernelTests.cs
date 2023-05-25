@@ -12,21 +12,6 @@ namespace GPU.Math.Net.Tests
             Gpu = new GPU(GPU.GetSomeDevice());
         }
 
-        public static dynamic CastTo(object value, Type target)
-        {
-            MethodInfo castMethod = typeof(KernelTests)
-                .GetMethod("PerformCast", BindingFlags.NonPublic | BindingFlags.Static)
-                .MakeGenericMethod(target);
-
-            return castMethod.Invoke(null, new object[] { value });
-        }
-        private static T PerformCast<T>(object value)
-        {
-            if (value.GetType() != typeof(T))
-                return (T)CastTo(value, value.GetType());
-
-            return (T)value;
-        }
 
         [Theory]
         [InlineData(typeof(int))]

@@ -7,7 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GPU.Math.Net", "GPU.Math.Ne
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GpuArrayDemo", "GpuArrayDemo\GpuArrayDemo.csproj", "{2B1E5AF9-B926-472C-B808-16636EA0621A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GPU.Math.Net.Tests", "GPU.Math.Net.Tests\GPU.Math.Net.Tests.csproj", "{9F15AE34-05D3-4B45-85A9-775A471CAA4B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GPU.Math.Net.Tests", "GPU.Math.Net.Tests\GPU.Math.Net.Tests.csproj", "{9F15AE34-05D3-4B45-85A9-775A471CAA4B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Accelerated.Math.Net", "Accelerated.Math.Net\Accelerated.Math.Net.csproj", "{2DD55130-4252-43FC-8D2F-3C202E1E9075}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gpu.Math.Net.Demo", "Gpu.Math.Net.Demo\Gpu.Math.Net.Demo.csproj", "{69212228-5EC3-41D2-914E-3F90093D8AFF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +31,14 @@ Global
 		{9F15AE34-05D3-4B45-85A9-775A471CAA4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9F15AE34-05D3-4B45-85A9-775A471CAA4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9F15AE34-05D3-4B45-85A9-775A471CAA4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DD55130-4252-43FC-8D2F-3C202E1E9075}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DD55130-4252-43FC-8D2F-3C202E1E9075}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DD55130-4252-43FC-8D2F-3C202E1E9075}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DD55130-4252-43FC-8D2F-3C202E1E9075}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69212228-5EC3-41D2-914E-3F90093D8AFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69212228-5EC3-41D2-914E-3F90093D8AFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69212228-5EC3-41D2-914E-3F90093D8AFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69212228-5EC3-41D2-914E-3F90093D8AFF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
