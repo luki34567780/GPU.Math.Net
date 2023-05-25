@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <PackageReference Include="OpenCL.Net" Version="2.2.9" />
+    <PackageReference Include="System.CodeDom" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -89,6 +90,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="kernels\generics\Tan.cl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="kernels\half\ModuloConstantValue.cl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="kernels\half\ModuloDynamicValue.cl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="kernels\int\ModuloConstantValue.cl">

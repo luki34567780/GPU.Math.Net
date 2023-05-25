@@ -2,10 +2,10 @@ import pyopencl
 
 context = pyopencl.create_some_context()
 
-with open("generic.cl", "r") as f:
+with open("generics/add.cl", "r") as f:
     code = f.read()
 
-code = code.replace("TYPENAMEHERE", "int")
+code = code.replace("TYPENAMEHERE", "uint")
 program = pyopencl.Program(context, code)
 program.build()
 

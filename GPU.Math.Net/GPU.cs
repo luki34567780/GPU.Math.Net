@@ -58,7 +58,7 @@ namespace GPU.Math.Net
             AppDomain.CurrentDomain.ProcessExit += ApplicationExitDisposer;
         }
 
-        private static void ThrowOnError(ErrorCode err) => ClHelpers.ThrowOnError(err);
+        private static void ThrowOnError(ErrorCode err) => Helpers.ThrowOnError(err);
 
         public GPU(Device device) : this(device, CommandQueueProperties.None) { }
 

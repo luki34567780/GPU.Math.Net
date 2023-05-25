@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GPU.Math.Net
 {
-    internal class ClHelpers
+    internal class Helpers
     {
         public static void ThrowOnError(ErrorCode err)
         {

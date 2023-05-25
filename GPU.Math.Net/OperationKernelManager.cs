@@ -1,5 +1,7 @@
-﻿using OpenCL.Net;
+﻿using Microsoft.CSharp;
+using OpenCL.Net;
 using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +11,7 @@ namespace GPU.Math.Net
 {
     public class OperationKernelManager
     {
-        private static void ThrowOnError(ErrorCode err) => ClHelpers.ThrowOnError(err);
+        private static void ThrowOnError(ErrorCode err) => Helpers.ThrowOnError(err);
         private static object _cacheLock = new();
         private static Dictionary<GPU, Dictionary<Type, Dictionary<string, Kernel>>> _cache = new();
         private static Dictionary<Kernel, Program> _programStorage = new();
@@ -21,8 +23,12 @@ namespace GPU.Math.Net
             { typeof(Half), "half" },
             { typeof(ulong), "ulong" },
             { typeof(int), "int" },
+            { typeof(uint), "uint" },
             { typeof(byte), "char" },
             { typeof(short), "short" },
+            { typeof(long), "long" },
+            { typeof(char), "short" },
+            { typeof(sbyte), "uchar" },
         };
 
         public static void ClearCacheAndDisposeKernels()
