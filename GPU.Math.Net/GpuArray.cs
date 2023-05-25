@@ -18,7 +18,17 @@ namespace GPU.Math.Net
         public int Identifier { get; }
         public static int Counter = 0;
 
-        public GpuArray(GPU gpu, T[] data, MemFlags flags)
+        private void ApplicationExitDisposer(object? _, EventArgs _2)
+        {
+            Dispose();
+        }
+
+        private GpuArray()
+        {
+            AppDomain.CurrentDomain.ProcessExit += ApplicationExitDisposer;
+        }
+
+        public GpuArray(GPU gpu, T[] data, MemFlags flags) : this()
         {
             Identifier = Counter++;
 
@@ -29,7 +39,7 @@ namespace GPU.Math.Net
             Type = typeof(T);
         }
 
-        public GpuArray(GPU gpu, int elementCount, MemFlags flags)
+        public GpuArray(GPU gpu, int elementCount, MemFlags flags) : this()
         {
             Identifier = Counter++;
 
@@ -51,6 +61,7 @@ namespace GPU.Math.Net
         {
             if (!_disposedValue)
             {
+                AppDomain.CurrentDomain.ProcessExit -= ApplicationExitDisposer;
                 if (disposing)
                 {
                     // TODO: dispose managed state (managed objects)

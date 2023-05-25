@@ -17,51 +17,113 @@ namespace GPU.Math.Net
 
         private bool disposedValue;
 
-        public static Platform[] GetPlatforms() => Cl.GetPlatformIDs(out var error) ?? throw new Cl.Exception(error);
+        public static Platform[] GetPlatforms()
+        {
+            var res = Cl.GetPlatformIDs(out var error);
+            ThrowOnError(error);
+            return res;
+        }
 
-        public static Device[] GetDevices(Platform platform) => GetDevices(platform, DeviceType.All);
+        public static Device[] GetDevices(Platform platform)
+        {
+            return GetDevices(platform, DeviceType.All);
+        }
 
-        public static Device[] GetDevices(Platform platform, DeviceType type) => Cl.GetDeviceIDs(platform, type, out var error) ?? throw new Cl.Exception(error);
+        public static Device[] GetDevices(Platform platform, DeviceType type)
+        {
+            var result = Cl.GetDeviceIDs(platform, type, out var error);
+            ThrowOnError(error);
+            return result;
+            
+        }
 
-        public static Device GetSomeDevice() => GetDevices(GetPlatforms().First()).First();
+        public static Device GetSomeDevice()
+        {
+            return GetDevices(GetPlatforms().First()).First();
+        }
+
+        private void ApplicationExitDisposer(object? _, EventArgs _2)
+        {
+            Dispose();
+        }
 
         public GPU(Device device, CommandQueueProperties commandQueueProperties)
         {
             Device = device;
-            Context = Cl.CreateContext(null, 1, new[] { device }, null, IntPtr.Zero, out var _);
-            Queue = Cl.CreateCommandQueue(Context, device, commandQueueProperties, out var _);
+            Context = Cl.CreateContext(null, 1, new[] { device }, null, IntPtr.Zero, out var error);
+            ThrowOnError(error);
+            Queue = Cl.CreateCommandQueue(Context, device, commandQueueProperties, out error);
+            ThrowOnError(error);
+
+            AppDomain.CurrentDomain.ProcessExit += ApplicationExitDisposer;
         }
+
+        private static void ThrowOnError(ErrorCode err) => ClHelpers.ThrowOnError(err);
 
         public GPU(Device device) : this(device, CommandQueueProperties.None) { }
 
-        public IMem<T> CreateBuffer<T>(MemFlags flags, T[] data) where T : struct => Cl.CreateBuffer<T>(Context, flags, data, out var error);
-        public IMem<T> CreateBuffer<T>(MemFlags flags, int size) where T : struct => Cl.CreateBuffer<T>(Context, flags, size, out var error);
-        public IMem CreateBuffer(MemFlags flags, int size) => Cl.CreateBuffer(Context, flags, size, out var error);
+        public IMem<T> CreateBuffer<T>(MemFlags flags, T[] data) where T : struct
+        {
+            var res = Cl.CreateBuffer<T>(Context, flags, data, out var error);
+            ThrowOnError(error);
+            return res;
+        }
 
-        public void CopyToHost<T>(IMem<T> source, T[] destination, int count, int offset) where T : struct => Cl.EnqueueReadBuffer(Queue, source, Bool.False, offset, count, destination, 0, null, out var _);
+        public IMem<T> CreateBuffer<T>(MemFlags flags, int size) where T : struct
+        {
+            var res = Cl.CreateBuffer<T>(Context, flags, size, out var error);
+            ThrowOnError(error);
+            return res;
+        }
 
-        public void CopyToHost(IMem source, byte* destination, int count, int startOffset) => Cl.EnqueueReadBuffer(Queue, source, Bool.False, (nint)startOffset, (nint)count, (nint)destination, 0, null, out var _);
+        public IMem CreateBuffer(MemFlags flags, int size)
+        {
+            var res = Cl.CreateBuffer(Context, flags, size, out var error);
+            ThrowOnError(error);
+            return res;
+        }
 
-        public void CopyToDevice<T>(T[] source, IMem<T> destination, int count, int offset) where T : struct => Cl.EnqueueWriteBuffer(Queue, destination, Bool.False, offset, count, source, 0, null, out var _);
+        public void CopyToHost<T>(IMem<T> source, T[] destination, int count, int offset) where T : struct
+        {
+            var error = Cl.EnqueueReadBuffer(Queue, source, Bool.False, offset, count, destination, 0, null, out var _);
+            ThrowOnError(error);
+        }
 
-        public void CopyToDevice(byte* source, IMem destination, int count, int offset) => Cl.EnqueueWriteBuffer(Queue, destination, Bool.False, (nint)offset, (nint)count, (nint)source, 0, null, out var _);
+        public void CopyToHost(IMem source, byte* destination, int count, int startOffset)
+        {
+            var error = Cl.EnqueueReadBuffer(Queue, source, Bool.False, (nint)startOffset, (nint)count, (nint)destination, 0, null, out var _);
+            ThrowOnError(error);
+        }
 
-        public void CopyOnDevice<T>(IMem<T> source, IMem<T> destination, int sourceOffset, int destinationOffset, int count) where T : struct => Cl.EnqueueCopyBuffer(Queue, source, destination, (nint)sourceOffset, (nint)destinationOffset, (nint)count, 0, null, out var _);
+        public void CopyToDevice<T>(T[] source, IMem<T> destination, int count, int offset) where T : struct
+        {
+            var error = Cl.EnqueueWriteBuffer(Queue, destination, Bool.False, offset, count, source, 0, null, out var _);
+            ThrowOnError(error);
+        }
+
+        public void CopyToDevice(byte* source, IMem destination, int count, int offset)
+        {
+            var error = Cl.EnqueueWriteBuffer(Queue, destination, Bool.False, (nint)offset, (nint)count, (nint)source, 0, null, out var _);
+            ThrowOnError(error);
+        }
+
+        public void CopyOnDevice<T>(IMem<T> source, IMem<T> destination, int sourceOffset, int destinationOffset, int count) where T : struct
+        {
+            var error = Cl.EnqueueCopyBuffer(Queue, source, destination, (nint)sourceOffset, (nint)destinationOffset, (nint)count, 0, null, out var res);
+            ThrowOnError(error);
+        }
 
         public void ExecuteKernel(Kernel kernel, int globalWorkSize)
         {
             var status = Cl.EnqueueNDRangeKernel(Queue, kernel, 1, null, new IntPtr[] { (nint)globalWorkSize }, null, 0, null, out var _);
-
-            if (status != ErrorCode.Success)
-            {
-                throw new Cl.Exception(status);
-            }
+            ThrowOnError(status);
         }
 
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
             {
+                AppDomain.CurrentDomain.ProcessExit -= ApplicationExitDisposer;
                 if (disposing)
                 {
                     // dispose managed state (managed objects)

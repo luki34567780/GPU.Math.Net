@@ -9,16 +9,47 @@ namespace GPU.Math.Net
 {
     public class OperationKernelManager
     {
+        private static void ThrowOnError(ErrorCode err) => ClHelpers.ThrowOnError(err);
         private static object _cacheLock = new();
-        public static int Counter = 0;
         private static Dictionary<GPU, Dictionary<Type, Dictionary<string, Kernel>>> _cache = new();
-        private static Dictionary<Type, string> CNameLookupTable = new()
+        private static Dictionary<Kernel, Program> _programStorage = new();
+        public static Dictionary<Type, string> CNameLookupTable = new()
         {
             { typeof(ushort), "ushort" },
             { typeof(float), "float" },
             { typeof(double), "double" },
-            { typeof(Half), "half" }
+            { typeof(Half), "half" },
+            { typeof(ulong), "ulong" },
+            { typeof(int), "int" },
+            { typeof(byte), "char" },
+            { typeof(short), "short" },
         };
+
+        public static void ClearCacheAndDisposeKernels()
+        {
+            lock(_cacheLock)
+            {
+                foreach(var gpu in _cache.Keys)
+                {
+                    foreach(var type in _cache[gpu].Keys)
+                    {
+                        foreach(var op in _cache[gpu][type].Keys)
+                        {
+                            var kernel = _cache[gpu][type][op];
+                        
+                            _programStorage[kernel].Dispose();
+                            _programStorage.Remove(kernel);
+
+                            _cache[gpu][type][op].Dispose();
+                            _cache[gpu][type].Remove(op);
+                        }
+
+                        _cache[gpu].Remove(type);
+                    }
+                    _cache.Remove(gpu);
+                }
+            }
+        }
 
         public static Kernel GetKernel(GPU gpu, Type type, string op)
         {
@@ -34,13 +65,20 @@ namespace GPU.Math.Net
                         }
                     }
                 }
-                Counter++;
+                
+                string cName;
+
+                if (CNameLookupTable.ContainsKey(type))
+                    cName = CNameLookupTable[type];
+                else
+                    cName = type.Name;
+
                 string? code = null;
                 string? raw = null;
 
                 // if a specific kernel for this combination exists compile it
-                var specialPath = $"kernels/{type.Name}/{op}.cl";
-                var genericOperationPath = $"kernels/{op}.cl";
+                var specialPath = $"kernels/{cName}/{op}.cl";
+                var genericOperationPath = $"kernels/generics/{op}.cl";
 
                 if (File.Exists(specialPath))
                 {
@@ -57,12 +95,6 @@ namespace GPU.Math.Net
 
                 if (raw != null)
                 {
-                    string cName;
-
-                    if (CNameLookupTable.ContainsKey(type))
-                        cName = CNameLookupTable[type];
-                    else
-                        cName = type.Name;
 
                     code = raw.Replace("TYPENAMEHERE", cName);
                 }
@@ -72,17 +104,15 @@ namespace GPU.Math.Net
 
                 var program = Cl.CreateProgramWithSource(gpu.Context, 1, new[] { code }, null, out var error);
 
-                if (error != ErrorCode.Success)
-                    throw new Cl.Exception(error);
+                ThrowOnError(error);
 
-                Cl.BuildProgram(program, 1, new[] { gpu.Device }, null, null, IntPtr.Zero);
+                error = Cl.BuildProgram(program, 1, new[] { gpu.Device }, null, null, IntPtr.Zero);
+
+                ThrowOnError(error);
+
                 var kernel = Cl.CreateKernel(program, op, out error);
 
-                if (error != ErrorCode.Success)
-                {
-                    var test = code.Any(x => x == '#');
-                    throw new Cl.Exception(error);
-                }
+                ThrowOnError(error);
 
                 if (!_cache.ContainsKey(gpu))
                 {
@@ -99,6 +129,9 @@ namespace GPU.Math.Net
                 {
                     _cache[gpu][type].Add(op, kernel);
                 }
+
+                if (!_programStorage.ContainsKey(kernel))
+                    _programStorage.Add(kernel, program);
 
                 return kernel;
             }
