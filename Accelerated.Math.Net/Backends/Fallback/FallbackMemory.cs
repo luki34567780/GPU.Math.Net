@@ -198,24 +198,25 @@ namespace Accelerated.Math.Net.Backends.Fallback
                 _values[i] = (T)Convert.ChangeType(System.Math.Pow(Convert.ToDouble(_values[i]), val), typeof(T));
         }
 
-        public IMem<T> PowToNewArray(T value)
-        {
-            throw new NotImplementedException();
-        }
+        public IMem<T> PowToNewArray(T value) => PowToNewArray(value, Count);
 
         public IMem<T> PowToNewArray(T value, int count)
         {
-            throw new NotImplementedException();
+            var val = Convert.ToDouble(value);
+            var res = new FallbackMemory<T>(count);
+
+            for (int i = 0; i < count; i++)
+                res[i] = (T)Convert.ChangeType(System.Math.Pow(Convert.ToDouble(_values[i]), val), typeof(T));
+
+            return res;
         }
 
-        public void Pow(IMem<T> values)
-        {
-            throw new NotImplementedException();
-        }
+        public void Pow(IMem<T> values) => Pow(values, Count);
 
         public void Pow(IMem<T> values, int count)
         {
-            throw new NotImplementedException();
+            for (int i = 0; i < count; i++)
+                _values[i] = (T)Convert.ChangeType(System.Math.Pow(Convert.ToDouble(_values[i]), Convert.ToDouble(values[i])), typeof(T));
         }
 
         public IMem<T> PowToNewArray(IMem<T> values)
@@ -225,147 +226,152 @@ namespace Accelerated.Math.Net.Backends.Fallback
 
         public IMem<T> PowToNewArray(IMem<T> values, int count)
         {
-            throw new NotImplementedException();
+            var res = new FallbackMemory<T>(count);
+
+            for (int i = 0; i < count; i++)
+                res[i] = (T)Convert.ChangeType(System.Math.Pow(Convert.ToDouble(_values[i]), Convert.ToDouble(values[i])), typeof(T));
+
+            return res;
         }
 
-        public void Sin()
-        {
-            throw new NotImplementedException();
-        }
+        public void Sin() => Sin(Count);
 
         public void Sin(int count)
         {
-            throw new NotImplementedException();
+            for (int i = 0; i < count; i++)
+                _values[i] = (T)Convert.ChangeType(System.Math.Sin(Convert.ToDouble(_values[i])), typeof(T));
         }
 
-        public IMem<T> SinToNewArray()
-        {
-            throw new NotImplementedException();
-        }
+        public IMem<T> SinToNewArray() => SinToNewArray(Count);
 
         public IMem<T> SinToNewArray(int count)
         {
-            throw new NotImplementedException();
+            var res = new FallbackMemory<T>(count);
+
+            for (int i = 0; i < count; i++)
+                res[i] = (T)Convert.ChangeType(System.Math.Sin(Convert.ToDouble(_values[i])), typeof(T));
+
+            return res;
         }
 
-        public void Cos()
-        {
-            throw new NotImplementedException();
-        }
+        public void Cos() => Cos(Count);
 
         public void Cos(int count)
         {
-            throw new NotImplementedException();
+            for (int i = 0; i < count; i++)
+                _values[i] = (T)Convert.ChangeType(System.Math.Cos(Convert.ToDouble(_values[i])), typeof(T));
         }
 
-        public IMem<T> CosToNewArray()
-        {
-            throw new NotImplementedException();
-        }
+        public IMem<T> CosToNewArray() => CosToNewArray(Count);
 
         public IMem<T> CosToNewArray(int count)
         {
-            throw new NotImplementedException();
+            var res = new FallbackMemory<T>(count);
+
+            for (int i = 0; i < count; i++)
+                res[i] = (T)Convert.ChangeType(System.Math.Cos(Convert.ToDouble(_values[i])), typeof(T));
+
+            return res;
         }
 
-        public void Tan()
-        {
-            throw new NotImplementedException();
-        }
+        public void Tan() => Tan(Count);
 
         public void Tan(int count)
         {
-            throw new NotImplementedException();
+            for (int i = 0; i < count; i++)
+                _values[i] = (T)Convert.ChangeType(System.Math.Tan(Convert.ToDouble(_values[i])), typeof(T));
         }
 
-        public IMem<T> TanToNewArray()
-        {
-            throw new NotImplementedException();
-        }
+        public IMem<T> TanToNewArray() => TanToNewArray(Count);
 
         public IMem<T> TanToNewArray(int count)
         {
-            throw new NotImplementedException();
+            var res = new FallbackMemory<T>(count);
+
+            for (int i = 0; i < count; i++)
+                res[i] = (T)Convert.ChangeType(System.Math.Tan(Convert.ToDouble(_values[i])), typeof(T));
+
+            return res;
         }
 
-        public void Log()
-        {
-            throw new NotImplementedException();
-        }
+        public void Log() => Log(Count);
 
         public void Log(int count)
         {
-            throw new NotImplementedException();
+            for (int i = 0; i < count; i++)
+                _values[i] = (T)Convert.ChangeType(System.Math.Log(Convert.ToDouble(_values[i])), typeof(T));
         }
 
-        public IMem<T> LogToNewArray()
-        {
-            throw new NotImplementedException();
-        }
+        public IMem<T> LogToNewArray() => LogToNewArray(Count);
 
         public IMem<T> LogToNewArray(int count)
         {
-            throw new NotImplementedException();
+            var res = new FallbackMemory<T>(count);
+
+            for (int i = 0; i < count; i++)
+                res[i] = (T)Convert.ChangeType(System.Math.Log(Convert.ToDouble(_values[i])), typeof(T));
+
+            return res;
         }
 
-        public void Log2()
-        {
-            throw new NotImplementedException();
-        }
+        public void Log2() => Log2(Count);
 
         public void Log2(int count)
         {
-            throw new NotImplementedException();
+            for (int i = 0; i < count; i++)
+                _values[i] = (T)Convert.ChangeType(System.Math.Log2(Convert.ToDouble(_values[i])), typeof(T));
         }
 
-        public IMem<T> Log2ToNewArray()
-        {
-            throw new NotImplementedException();
-        }
+        public IMem<T> Log2ToNewArray() => Log2ToNewArray(Count);
 
         public IMem<T> Log2ToNewArray(int count)
         {
-            throw new NotImplementedException();
+            var res = new FallbackMemory<T>(count);
+
+            for (int i = 0; i < count; i++)
+                res[i] = (T)Convert.ChangeType(System.Math.Log2(Convert.ToDouble(_values[i])), typeof(T));
+
+            return res;
         }
 
-        public void Log10()
-        {
-            throw new NotImplementedException();
-        }
+        public void Log10() => Log10(Count);
 
         public void Log10(int count)
         {
-            throw new NotImplementedException();
+            for (int i = 0; i < count; i++)
+                _values[i] = (T)Convert.ChangeType(System.Math.Log10(Convert.ToDouble(_values[i])), typeof(T));
         }
 
-        public IMem<T> Log10ToNewArray()
-        {
-            throw new NotImplementedException();
-        }
+        public IMem<T> Log10ToNewArray() => Log10ToNewArray(Count);
 
         public IMem<T> Log10ToNewArray(int count)
         {
-            throw new NotImplementedException();
+            var res = new FallbackMemory<T>(count);
+
+            for (int i = 0; i < count; i++)
+                res[i] = (T)Convert.ChangeType(System.Math.Log10(Convert.ToDouble(_values[i])), typeof(T));
+
+            return res;
         }
 
-        public void Abs()
-        {
-            throw new NotImplementedException();
-        }
+        public void Abs() => Abs(Count);
 
         public void Abs(int count)
         {
-            throw new NotImplementedException();
+            for (int i = 0; i < count; i++)
+                _values[i] = (T)Convert.ChangeType(System.Math.Abs(Convert.ToDouble(_values[i])), typeof(T));
         }
 
-        public IMem<T> AbsToNewArray()
-        {
-            throw new NotImplementedException();
-        }
+        public IMem<T> AbsToNewArray() => AbsToNewArray(Count);
 
         public IMem<T> AbsToNewArray(int count)
         {
-            throw new NotImplementedException();
+            var res = new FallbackMemory<T>(count);
+
+            for (int i = 0; i < count; i++)
+                res[i] = (T)Convert.ChangeType(System.Math.Abs(Convert.ToDouble(_values[i])), typeof(T));
+
+            return res;
         }
     }
 }
