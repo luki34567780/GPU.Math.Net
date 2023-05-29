@@ -1,5 +1,5 @@
 ﻿using Accelerated.Math.Net;
-using Accelerated.Math.Net.Backends.Fallback;
+using Accelerated.Math.Net.Backends;
 
 namespace Gpu.Math.Net.Demo
 {
@@ -7,9 +7,10 @@ namespace Gpu.Math.Net.Demo
     {
         static void Main(string[] args)
         {
-            var a = new FallbackMemory<int>(1000, new int[1000].Select(x => Random.Shared.Next(1000)).ToArray());
+            var a = new Avx128<int>(1000, new int[1000].Select(x => Random.Shared.Next(1000)).ToArray());
+            var b = new Avx128<int>(1000, new int[1000].Select(x => Random.Shared.Next(1000)).ToArray());
 
-            a.Pow(2);
+            a.Add(b);
         }
     }
 }

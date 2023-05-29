@@ -8,9 +8,16 @@ namespace Accelerated.Math.Net
 {
     public interface IMem<T> : IDisposable
     {
+        public int Count { get; }
         public bool Disposed { get; }
         public T this[int index] { get; set; }
-
+        public void ToCpuGuaranteedCopy(ref Span<T> destination);
+        public void ToDevice(T[] data);
+        public void ToDeviceGuaranteedCopy(T[] data);
+        public void ToDevice(ref Span<T> data);
+        public void ToDeviceGuaranteedCopy(ref Span<T> data);
+        public T[] ToCpu();
+        public T[] ToCpuGuaranteedCopy();
         public void Add(IMem<T> other);
         public void Add(IMem<T> other, int count);
         public IMem<T> AddToNewArray(IMem<T> other);
